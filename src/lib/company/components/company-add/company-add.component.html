@@ -1,0 +1,48 @@
+<form [formGroup]="addForm" class="update-form flex jc-space-evenly">
+
+  <mat-form-field class="form-field">
+    <mat-label>Name</mat-label>
+    <input
+      matInput
+      id="name"
+      formControlName="name"
+    />
+    <span *ngIf="name && (name.dirty || !name.untouched)">
+      <mat-error *ngIf="addForm.getError('required', 'name')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </span>
+  </mat-form-field>
+
+  <mat-form-field class="form-field">
+    <mat-label>UID</mat-label>
+    <input
+      id="uid"
+      matInput
+      formControlName="uid" />
+    <span *ngIf="uid?.dirty || !uid?.untouched">
+      @if (uid?.errors) {
+        <mat-error>
+          <span *ngIf="addForm.getError('required', 'uid')">required</span>
+          <span *ngIf="addForm.getError('uidExists', 'uid')">exists!</span>
+          <span *ngIf="addForm.getError('uidInvalid', 'uid')">invalid!</span>
+        </mat-error>
+      }
+    </span>
+  </mat-form-field>
+
+  <mat-form-field class="form-field">
+    <mat-label>State</mat-label>
+    <mat-select
+      placeholder="Active"
+      formControlName="active"
+      #active
+    >
+      <mat-option [value]="false">inActive</mat-option>
+      <mat-option [value]="true">active</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+
+</form>

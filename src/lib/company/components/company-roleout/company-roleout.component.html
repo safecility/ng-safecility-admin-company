@@ -1,0 +1,70 @@
+@if (_company) {
+    <span class="flex flex-column slider-panel company">
+      <span class="flex jc-space-between v-align-center m2">
+        <span class="mat-mini-text">{{ _company.name }}</span>
+        <span>
+          <button mat-mini-fab [matMenuTriggerFor]="menu" aria-label="open company actions menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu class="button-menu" #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button
+              (click)="archiveCompany()"
+              mat-menu-item>
+              <mat-icon>archive</mat-icon>
+              <span>Archive</span>
+            </button>
+          </mat-menu>
+        </span>
+      </span>
+      <mat-divider></mat-divider>
+      <span class="flex flex-column roleout-item">
+        <span class="flex jc-space-evenly v-align-center">
+          <span class="attribute">name</span><span class="value">{{ _company.name }}</span>
+        </span>
+        <span class="flex jc-space-evenly v-align-center">
+          <span class="attribute">uid</span><span class="value">{{ _company.uid }}</span>
+        </span>
+      </span>
+
+      <span class="flex flex-column">
+        <mat-selection-list
+          [multiple]="false" [hideSingleSelectionIndicator]="true">
+        @for (item of list; track item.name) {
+          <mat-list-option (click)="listChange(item)">{{item.name}}</mat-list-option>
+        } @empty {
+          <mat-list-item>No companies</mat-list-item>
+        }
+        </mat-selection-list>
+      </span>
+    </span>
+
+    @if (listSelection && listSelection.path) {
+      @switch (listSelection.path[2].pathElement) {
+        @case ('views') {
+          <lib-view-nav-roleout
+            [@openClose]="showSubmenu"
+            [index]="index+1"
+            [company]="_company"
+            class="slider-component opacity-zero"
+          >
+          </lib-view-nav-roleout>
+        }
+        @case ('locations') {
+          <span class="slider-component">
+            Locations
+          </span>
+        }
+        @case ('users') {
+          <span class="slider-component">
+            Users
+          </span>
+        }
+      }
+    }
+}
+
+

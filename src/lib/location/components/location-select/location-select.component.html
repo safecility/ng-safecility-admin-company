@@ -1,0 +1,11 @@
+<mat-select [formControl]="locationsControl">
+  <input matInput
+         class="light-input"
+         (keyup)="applyFilter(filterInput.value)"
+         placeholder="finite-drive" #filterInput
+         autocomplete="off"
+  >
+  <mat-option *ngFor="let option of filteredLocations" [value]="option.uid">
+    {{ option.name }}
+  </mat-option>
+</mat-select>

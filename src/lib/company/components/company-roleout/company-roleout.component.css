@@ -1,0 +1,14 @@
+.attribute {
+  padding: .2em;
+  width: 8em;
+  background: #aabbaa;
+}
+
+.company {
+  background: #a1c5c2;
+}
+
+.value {
+  padding: .2em;
+  width: 8em;
+}

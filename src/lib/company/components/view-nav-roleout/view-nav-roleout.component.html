@@ -1,0 +1,42 @@
+
+  <span class="flex flex-column slider-panel">
+
+    <span class="flex jc-space-between v-align-center m2">
+      <span class="mat-mini-text ">views</span>
+      <button
+        (click)="openEditor()"
+        aria-label="add" mat-mini-fab><mat-icon>add_circle</mat-icon></button>
+    </span>
+
+    <mat-divider></mat-divider>
+
+    <span class="flex">
+    @if (isLoadingResults) {
+      <span class="slider-loading-shade slider-panel">
+        <mat-spinner></mat-spinner>
+      </span>
+    }
+      <mat-selection-list
+        class="roleout-item"
+        [multiple]="false" [hideSingleSelectionIndicator]="true">
+        @for (item of list; track item.name) {
+          <mat-list-option (click)="navigate(item)">{{item.name}}</mat-list-option>
+        } @empty {
+          <mat-list-item>No views</mat-list-item>
+        }
+      </mat-selection-list>
+    </span>
+
+  </span>
+
+  @if (view) {
+    <lib-view-roleout
+      class="slider-component"
+      [view]="view"
+    >
+    </lib-view-roleout>
+  }
+
+
+
+

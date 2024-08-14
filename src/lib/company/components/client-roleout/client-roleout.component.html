@@ -1,0 +1,41 @@
+<div class="slider-panel">
+  <span class="flex flex-column full-width">
+    <span class="flex flex-column">
+      <span class="flex jc-space-between v-align-center m2">
+        <span class="mat-mini-text">Clients</span>
+      </span>
+      <mat-divider></mat-divider>
+    </span>
+
+    <mat-selection-list class="full-width" [multiple]="false" [hideSingleSelectionIndicator]="true">
+      @for (item of clientRoots; track item.name) {
+        <mat-list-option (click)="subMenu(item)">{{item.name}}</mat-list-option>
+      } @empty {
+        <mat-list-item>Error no options</mat-list-item>
+      }
+    </mat-selection-list>
+  </span>
+</div>
+
+@if (nav && nav.path) {
+  @switch (nav.path[index].pathElement) {
+    @case ('views') {
+      <lib-view-nav-roleout
+        [index]="index+1"
+        [company]="company"
+        class="slider-component opacity-zero"
+      >
+      </lib-view-nav-roleout>
+    }
+    @case ('locations') {
+      <span class="slider-component">
+        Locations
+      </span>
+    }
+    @case ('users') {
+      <span class="slider-component">
+            Users
+          </span>
+    }
+  }
+}
