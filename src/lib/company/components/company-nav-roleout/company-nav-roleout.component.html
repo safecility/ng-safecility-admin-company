@@ -14,11 +14,14 @@
       </span>
     }
     <mat-selection-list
+      class="full-width"
       [multiple]="false" [hideSingleSelectionIndicator]="true">
       @for (item of list; track item.name) {
         <mat-list-option (click)="navigate(item)">{{item.name}}</mat-list-option>
       } @empty {
-        <mat-list-item>No companies</mat-list-item>
+        <mat-list-item class="text-center">
+          {{isLoadingResults? 'loading...': 'No companies'}}
+        </mat-list-item>
       }
     </mat-selection-list>
   </span>

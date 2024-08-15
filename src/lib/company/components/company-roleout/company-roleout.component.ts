@@ -8,6 +8,9 @@ import {Subscription, timer} from "rxjs";
 import {EditAction, fadeTrigger, NavigationItem, SliderPanel, Sliders, SliderService} from "safecility-admin-services";
 import {ViewNavRoleoutComponent} from "../view-nav-roleout/view-nav-roleout.component";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {
+  LocationNavRoleoutComponent
+} from "../../../location/components/location-nav-roleout/location-nav-roleout.component";
 
 const roots: Array<NavigationItem> = [
   {name: "views", uid: "views", path: [
@@ -31,7 +34,8 @@ const roots: Array<NavigationItem> = [
     MatIconButton,
     MatMenuTrigger,
     MatMenu,
-    MatMenuItem
+    MatMenuItem,
+    LocationNavRoleoutComponent
   ],
   templateUrl: './company-roleout.component.html',
   styleUrl: './company-roleout.component.css',

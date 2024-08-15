@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { CompanyAddComponent, CompanyEmit, NewCompany } from "../company-add/company-add.component";
+import { CompanyAddComponent } from "../company-add/company-add.component";
 import { MatDialogActions, MatDialogClose } from "@angular/material/dialog";
 import { MatButton } from "@angular/material/button";
 import { EditorService } from "safecility-admin-services";
-import { CompanyService } from "../../company.service";
+import { CompanyEmit, CompanyService, NewCompany } from "../../company.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({

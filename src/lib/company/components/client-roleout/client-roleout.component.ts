@@ -4,6 +4,9 @@ import {MatDivider} from "@angular/material/divider";
 import {MatListItem, MatListOption, MatSelectionList} from "@angular/material/list";
 import {ViewNavRoleoutComponent} from "../view-nav-roleout/view-nav-roleout.component";
 import {JsonPipe} from "@angular/common";
+import {
+  LocationNavRoleoutComponent
+} from "../../../location/components/location-nav-roleout/location-nav-roleout.component";
 
 @Component({
   selector: 'lib-client-roleout',
@@ -14,7 +17,8 @@ import {JsonPipe} from "@angular/common";
     MatListOption,
     MatSelectionList,
     ViewNavRoleoutComponent,
-    JsonPipe
+    JsonPipe,
+    LocationNavRoleoutComponent
   ],
   templateUrl: './client-roleout.component.html',
   styleUrl: './client-roleout.component.css'

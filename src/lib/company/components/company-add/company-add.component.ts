@@ -8,22 +8,12 @@ import {
   ValidationErrors,
   Validators
 } from "@angular/forms";
-import {map, Observable, of} from "rxjs";
-import {CompanyService} from "../../company.service";
+import {map, of, Observable} from "rxjs";
+import {CompanyEmit, CompanyService, NewCompany} from "../../company.service";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {JsonPipe, NgIf} from "@angular/common";
-
-export interface NewCompany {
-  uid: string
-  name: string
-}
-
-export interface CompanyEmit {
-  company: NewCompany
-  valid: boolean
-}
 
 @Component({
   selector: 'lib-company-add',

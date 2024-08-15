@@ -54,9 +54,11 @@
           </lib-view-nav-roleout>
         }
         @case ('locations') {
-          <span class="slider-component">
-            Locations
-          </span>
+          <lib-location-nav-roleout
+            [index]="index+1"
+            [company]="_company"
+            class="slider-component opacity-zero"
+          ></lib-location-nav-roleout>
         }
         @case ('users') {
           <span class="slider-component">

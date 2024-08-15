@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, delay, map, of, timer} from "rxjs";
 import { Breadcrumb, NavigationItem } from "safecility-admin-services";
+import { NewLocation} from "./locations.service";
 import {Company} from "../company/company.model";
 
 const sourceLocations = [
-  {name: "Safecility", uid: "safecility", company: "safecility", path: [
+  {name: "HQ", uid: "hq", company: "safecility", path: [
       {name: "company", pathElement: "company"}, {name: "Safecility", pathElement: "safecility"},
       {name: "locations", pathElement: "locations"}, {name: "HQ", pathElement: "hq"}
     ] as Array<Breadcrumb>},
@@ -28,23 +29,16 @@ const sourceLocations = [
     ]},
 ]
 
-export interface NewLocation {
-  uid: string
-  name: string
-  company: Company
-}
-
-export interface LocationEmit {
-  location: NewLocation
-  valid: boolean
+interface typedNavigationItem extends NavigationItem {
+  company: string
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocationsService {
+export class LocationsMock {
 
-  locations = new BehaviorSubject<Array<NavigationItem>>(sourceLocations)
+  locations = new BehaviorSubject<Array<typedNavigationItem>>(sourceLocations)
 
   uidExists(uid: string): Observable<boolean> {
     return of(this.locations.value.reduce((p, c) => {
@@ -57,7 +51,8 @@ export class LocationsService {
   addLocation(newLocation: NewLocation): Observable<boolean> {
     return timer(300).pipe(map(_=> {
       let current = this.locations.value;
-      current.push( {name: newLocation.name, uid: newLocation.uid, path:  [
+      current.push( {name: newLocation.name, uid: newLocation.uid, company: newLocation.company.uid, path:  [
+          {name: "company", pathElement: "company"}, {name: newLocation.company.name, pathElement: newLocation.company.uid},
           {name: "location", pathElement: "location"}, {name: newLocation.name, pathElement: newLocation.uid}
         ]},)
       this.locations.next(current);
@@ -72,8 +67,12 @@ export class LocationsService {
     }))
   }
 
-  getLocationList(company: NavigationItem): Observable<Array<NavigationItem> | undefined> {
-    return this.locations
+  getLocationList(company: Company): Observable<Array<NavigationItem> | undefined> {
+    return this.locations.pipe(delay(400), map( (a) => {
+      if (!a)
+        return []
+      return a.filter(u => !!u).filter(x => !x || x.company === company.uid) as Array<NavigationItem>
+    }))
   }
 
 }

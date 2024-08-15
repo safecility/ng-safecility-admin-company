@@ -1,7 +1,7 @@
-import {BehaviorSubject, delay, first, map, Observable, of, reduce, single, timer} from "rxjs";
+import { BehaviorSubject, Observable, delay, map, of, timer} from "rxjs";
 import { Injectable } from "@angular/core";
-import {Breadcrumb, NavigationItem, UID} from "safecility-admin-services";
-import {NewCompany} from "./components/company-add/company-add.component";
+import { Breadcrumb, NavigationItem, UID} from "safecility-admin-services";
+import {NewCompany} from "./company.service";
 
 let sourceCompanies: Array<NavigationItem> = [
   {name: "Safecility", uid: "safecility", path: [
@@ -57,7 +57,7 @@ export class CompanyMock {
   }
 
   getCompanyList() : Observable<Array<NavigationItem> | undefined> {
-    return this.companies.pipe(delay(100))
+    return this.companies.pipe(delay(400))
   }
 
   getViewList(company: NavigationItem) : Observable<Array<NavigationItem> | undefined> {

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Breadcrumb, NavigationItem} from "safecility-admin-services";
-import {BehaviorSubject, delay, first, map, Observable, of, timer} from "rxjs";
-import {NewCompany} from "./components/company-add/company-add.component";
+import { BehaviorSubject, Observable, delay, map, of, timer} from "rxjs";
 
 const sourceCompanies = [
   {name: "Safecility", uid: "safecility", path: [
@@ -14,6 +13,16 @@ const sourceCompanies = [
       {name: "company", pathElement: "company"}, {name: "Small Corp", pathElement: "small-corp"}
     ]},
 ]
+
+export interface NewCompany {
+  uid: string
+  name: string
+}
+
+export interface CompanyEmit {
+  company: NewCompany
+  valid: boolean
+}
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +60,7 @@ export class CompanyService {
   }
 
   getCompanyList(): Observable<Array<NavigationItem> | undefined> {
-    return this.companies
+    return this.companies.pipe(delay(400))
   }
 
   getViewList(company: NavigationItem) : Observable<Array<NavigationItem> | undefined> {
