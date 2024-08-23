@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {EditorService, NavigationItem, Sliders, SliderService} from "safecility-admin-services";
+import {Component, Input, OnDestroy} from '@angular/core';
+import {EditorService, NavigationItem, SliderPanel, Sliders, SliderService} from "safecility-admin-services";
 import {Subscription} from "rxjs";
 import {LocationsService} from "../../locations.service";
 import {MatDivider} from "@angular/material/divider";
@@ -7,7 +7,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatListItem, MatListOption, MatSelectionList} from "@angular/material/list";
 import {MatMiniFabButton} from "@angular/material/button";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {ViewRoleoutComponent} from "../../../company/components/view-roleout/view-roleout.component";
+import {ViewRoleoutComponent} from "../../../view/components/view-roleout/view-roleout.component";
 import {LocationRoleoutComponent} from "../location-roleout/location-roleout.component";
 
 @Component({
@@ -27,19 +27,24 @@ import {LocationRoleoutComponent} from "../location-roleout/location-roleout.com
   templateUrl: './location-nav-roleout.component.html',
   styleUrl: './location-nav-roleout.component.css'
 })
-export class LocationNavRoleoutComponent {
+export class LocationNavRoleoutComponent implements SliderPanel, OnDestroy {
 
-  @Input() index = 3;
+  @Input() set setParent(parent: NavigationItem | undefined) {
+    if (!parent || !parent.path)
+      return;
+    const path = parent.path.map(x => x).concat({name: "locations", uid: "locations"})
+    this.root = {name: "locations", uid: "locations", path}
+  }
+  root: NavigationItem | undefined;
+  selectedLocation: NavigationItem | undefined;
 
-  list: Array<NavigationItem> | undefined;
+  locationOptions: Array<NavigationItem> | undefined;
 
-  location: NavigationItem | undefined;
-
-  @Input() set company(company: NavigationItem | undefined) {
-    this._company = company;
+  @Input() set setCompany(company: NavigationItem | undefined) {
+    this.company = company;
     this.getLocations();
   }
-  _company: NavigationItem | undefined;
+  company: NavigationItem | undefined;
 
   ngOnDestroy(): void {
     this.sliderSubscription?.unsubscribe();
@@ -56,12 +61,17 @@ export class LocationNavRoleoutComponent {
     this.sliderSubscription = this.sliderService.sliderNavigation(Sliders.NavSlider)?.subscribe({
       next: value => {
         if (!value || !value.path) {
-          this._company = undefined;
+          this.company = undefined;
           return;
         }
-        const index = value.path.length;
-        if (index < this.index) {
-          this._company = undefined;
+        if (!this.root || !this.root.path) {
+          console.warn("we need root to update state")
+          return
+        }
+        const componentSliderIndex = this.root?.path?.length;
+        const navigationIndex = value.path.length;
+        if (navigationIndex < componentSliderIndex) {
+          this.company = undefined;
         }
       }
     })
@@ -69,7 +79,7 @@ export class LocationNavRoleoutComponent {
 
   navigate(item: NavigationItem | undefined) {
     this.sliderService.updateSliderNavigation(Sliders.NavSlider, item);
-    this.location = item;
+    this.selectedLocation = item;
   }
 
   openEditor() {
@@ -77,26 +87,26 @@ export class LocationNavRoleoutComponent {
   }
 
   getLocations(): void {
-    if (!this._company) {
+    if (!this.company) {
       console.error("locations need a company to work")
       return;
     }
-    this.locationService.getLocationList(this._company).subscribe({
+    this.locationService.getLocationList(this.company).subscribe({
       complete(): void {
       },
       next: (data: Array<NavigationItem> | undefined) => {
         if (data && data.length > 0) {
-          if (!this._company){
+          if (!this.company){
             console.error("company must be set")
             return
           }
-          if (!this._company.path){
+          if (!this.company.path){
             console.error("company path must be set")
             return
           }
 
         }
-        this.list = data;
+        this.locationOptions = data;
         this.isLoadingResults = false;
       },
       error: (err: Error) => {

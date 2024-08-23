@@ -8,10 +8,15 @@ export * from './lib/company/company.service';
 
 export * from './lib/company/components/company-add/company-add.component';
 export * from './lib/company/components/company-add-editor/company-add-editor.component';
-export * from './lib/company/components/view-add/view-add.component';
 export * from './lib/company/components/group-add/group-add.component';
 export * from './lib/company/components/company-nav-roleout/company-nav-roleout.component';
 export * from './lib/company/components/client-roleout/client-roleout.component';
+
+export * from './lib/view/components/view-add/view-add.component';
+export * from './lib/view/components/view-nav-roleout/view-nav-roleout.component';
+export * from './lib/view/components/view-roleout/view-roleout.component';
+export * from './lib/view/view.mock';
+export * from './lib/view/view.service';
 
 export * from './lib/location/location.model';
 export * from './lib/location/locations.mock';

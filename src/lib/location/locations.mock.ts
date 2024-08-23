@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, delay, map, of, timer} from "rxjs";
-import { Breadcrumb, NavigationItem } from "safecility-admin-services";
+import { Resource, NavigationItem } from "safecility-admin-services";
 import { NewLocation} from "./locations.service";
 import {Company} from "../company/company.model";
 
 const sourceLocations = [
   {name: "HQ", uid: "hq", company: "safecility", path: [
-      {name: "company", pathElement: "company"}, {name: "Safecility", pathElement: "safecility"},
-      {name: "locations", pathElement: "locations"}, {name: "HQ", pathElement: "hq"}
-    ] as Array<Breadcrumb>},
+      {name: "company", uid: "company"}, {name: "Safecility", uid: "safecility"},
+      {name: "locations", uid: "locations"}, {name: "HQ", uid: "hq"}
+    ] as Array<Resource>},
   {name: "HQ", uid: "hq", company: "big-corp", path: [
-      {name: "company", pathElement: "company"}, {name: "Big Corp", pathElement: "big-corp"},
-      {name: "locations", pathElement: "locations"}, {name: "HQ", pathElement: "hq"}
+      {name: "company", uid: "company"}, {name: "Big Corp", uid: "big-corp"},
+      {name: "locations", uid: "locations"}, {name: "HQ", uid: "hq"}
     ] },
   {name: "HQ First Floor", uid: "hq-floor1", company: "big-corp", path: [
-      {name: "company", pathElement: "company"}, {name: "Big Corp", pathElement: "big-corp"},
-      {name: "locations", pathElement: "locations"},
-      {name: "HQ First Floor", pathElement: "hq-floor1"}
+      {name: "company", uid: "company"}, {name: "Big Corp", uid: "big-corp"},
+      {name: "locations", uid: "locations"},
+      {name: "HQ First Floor", uid: "hq-floor1"}
     ] },
   {name: "HQ Second Floor", uid: "hq-floor2", company: "big-corp", path: [
-      {name: "company", pathElement: "company"}, {name: "Big Corp", pathElement: "big-corp"},
-      {name: "locations", pathElement: "locations"},
-      {name: "HQ Second Floor", pathElement: "hq-floor2"}
+      {name: "company", uid: "company"}, {name: "Big Corp", uid: "big-corp"},
+      {name: "locations", uid: "locations"},
+      {name: "HQ Second Floor", uid: "hq-floor2"}
     ] },
   {name: "Small Corp HQ", uid: "small-corp-hq", company: "small-corp", path:  [
-      {name: "company", pathElement: "company"}, {name: "Small Corp", pathElement: "small-corp"},
-      {name: "locations", pathElement: "locations"}, {name: "Small Corp HQ", pathElement: "small-corp-hq"}
+      {name: "company", uid: "company"}, {name: "Small Corp", uid: "small-corp"},
+      {name: "locations", uid: "locations"}, {name: "Small Corp HQ", uid: "small-corp-hq"}
     ]},
 ]
 
@@ -52,8 +52,8 @@ export class LocationsMock {
     return timer(300).pipe(map(_=> {
       let current = this.locations.value;
       current.push( {name: newLocation.name, uid: newLocation.uid, company: newLocation.company.uid, path:  [
-          {name: "company", pathElement: "company"}, {name: newLocation.company.name, pathElement: newLocation.company.uid},
-          {name: "location", pathElement: "location"}, {name: newLocation.name, pathElement: newLocation.uid}
+          {name: "company", uid: "company"}, {name: newLocation.company.name, uid: newLocation.company.uid},
+          {name: "location", uid: "location"}, {name: newLocation.name, uid: newLocation.uid}
         ]},)
       this.locations.next(current);
       return true

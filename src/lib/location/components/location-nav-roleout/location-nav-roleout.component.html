@@ -18,7 +18,7 @@
       <mat-selection-list
         class="full-width"
         [multiple]="false" [hideSingleSelectionIndicator]="true">
-        @for (item of list; track item.name) {
+        @for (item of locationOptions; track item.name) {
           <mat-list-option (click)="navigate(item)">{{item.name}}</mat-list-option>
         } @empty {
           <mat-list-item>
@@ -30,10 +30,11 @@
 
   </span>
 
-@if (location) {
+@if (selectedLocation) {
   <lib-location-roleout
     class="slider-component"
-    [location]="location"
+    [parent]="root"
+    [setLocation]="undefined"
   >
   </lib-location-roleout>
 }

@@ -1,7 +1,7 @@
-@if (_company) {
+<script src="company-roleout.component.ts"></script>@if (company && loaded) {
     <span class="flex flex-column slider-panel company">
       <span class="flex jc-space-between v-align-center m2">
-        <span class="mat-mini-text">{{ _company.name }}</span>
+        <span class="mat-mini-text">{{ company.name }}</span>
         <span>
           <button mat-mini-fab [matMenuTriggerFor]="menu" aria-label="open company actions menu">
             <mat-icon>more_vert</mat-icon>
@@ -23,18 +23,18 @@
       <mat-divider></mat-divider>
       <span class="flex flex-column roleout-item">
         <span class="flex jc-space-evenly v-align-center">
-          <span class="attribute">name</span><span class="value">{{ _company.name }}</span>
+          <span class="attribute">name</span><span class="value">{{ company.name }}</span>
         </span>
         <span class="flex jc-space-evenly v-align-center">
-          <span class="attribute">uid</span><span class="value">{{ _company.uid }}</span>
+          <span class="attribute">uid</span><span class="value">{{ company.uid }}</span>
         </span>
       </span>
 
       <span class="flex flex-column">
         <mat-selection-list
           [multiple]="false" [hideSingleSelectionIndicator]="true">
-        @for (item of list; track item.name) {
-          <mat-list-option (click)="listChange(item)">{{item.name}}</mat-list-option>
+        @for (item of companySubMenuOptions; track item.name) {
+          <mat-list-option (click)="openSubmenu(item)">{{item.name}}</mat-list-option>
         } @empty {
           <mat-list-item>No companies</mat-list-item>
         }
@@ -42,21 +42,21 @@
       </span>
     </span>
 
-    @if (listSelection && listSelection.path) {
-      @switch (listSelection.path[2].pathElement) {
+    @if (submenuSelection) {
+      @switch (submenuSelection.uid) {
         @case ('views') {
           <lib-view-nav-roleout
             [@openClose]="showSubmenu"
-            [index]="index+1"
-            [company]="_company"
+            [parent]="root"
+            [setCompany]="company"
             class="slider-component opacity-zero"
           >
           </lib-view-nav-roleout>
         }
         @case ('locations') {
           <lib-location-nav-roleout
-            [index]="index+1"
-            [company]="_company"
+            [setParent]="root"
+            [setCompany]="company"
             class="slider-component opacity-zero"
           ></lib-location-nav-roleout>
         }
@@ -67,6 +67,10 @@
         }
       }
     }
+} @else if (loaded && !company) {
+  <span>No company</span>
+} @else {
+  <span>loading...</span>
 }
 
 

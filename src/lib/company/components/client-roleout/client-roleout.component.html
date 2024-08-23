@@ -8,8 +8,8 @@
     </span>
 
     <mat-selection-list class="full-width" [multiple]="false" [hideSingleSelectionIndicator]="true">
-      @for (item of clientRoots; track item.name) {
-        <mat-list-option (click)="subMenu(item)">{{item.name}}</mat-list-option>
+      @for (item of clientRoutes; track item.name) {
+        <mat-list-option (click)="openSubmenu(item)">{{item.name}}</mat-list-option>
       } @empty {
         <mat-list-item>Error no options</mat-list-item>
       }
@@ -17,20 +17,20 @@
   </span>
 </div>
 
-@if (nav && nav.path) {
-  @switch (nav.path[index].pathElement) {
+@if (selectedRoute) {
+  @switch (selectedRoute.uid) {
     @case ('views') {
       <lib-view-nav-roleout
-        [index]="index+1"
-        [company]="company"
+        [parent]="root"
+        [setCompany]="company"
         class="slider-component opacity-zero"
       >
       </lib-view-nav-roleout>
     }
     @case ('locations') {
       <lib-location-nav-roleout
-        [index]="index+1"
-        [company]="company"
+        [setParent]="root"
+        [setCompany]="company"
         class="slider-component opacity-zero"
       ></lib-location-nav-roleout>
     }

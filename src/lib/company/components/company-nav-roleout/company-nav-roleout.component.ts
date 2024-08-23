@@ -12,7 +12,7 @@ import {
   NavigationItem,
   Sliders,
   fadeTrigger,
-  EditAction
+  EditAction, Resource, MatchNavigationItem
 } from "safecility-admin-services";
 import {Subscription, timer} from "rxjs";
 import { JsonPipe } from "@angular/common";
@@ -40,16 +40,21 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
 })
 export class CompanyNavRoleoutComponent implements SliderPanel, OnDestroy {
 
-  @Input() index: number = 1;
-  @Input() root: NavigationItem = {name: 'company', uid: 'company', path: [
-      {name: "company", pathElement: "company"}
-    ]}
+  @Input() set setParent(parent: NavigationItem | undefined) {
+    console.log("setting company nav roleout", parent);
+    if (!parent || !parent.path) {
+      return;
+    }
+    const path = parent.path.map(x => x).concat({name: "company", uid: "company"});
+    this.root = {name: 'company', uid: 'company', path}
+  }
+  root: NavigationItem | undefined
 
   showSubmenu = "closed";
 
-  list: Array<NavigationItem> | undefined;
+  companyOptions: Array<NavigationItem> | undefined;
 
-  company: NavigationItem | undefined;
+  selectedCompany: NavigationItem | undefined;
 
   isLoadingResults: boolean = true;
 
@@ -68,10 +73,21 @@ export class CompanyNavRoleoutComponent implements SliderPanel, OnDestroy {
       complete(): void {
       },
       next: (data: Array<NavigationItem> | undefined) => {
-        console.log("got companies", data);
-        if (data && data.length > 0) {
+        if (!data) {
+          this.companyOptions = undefined;
+          return;
         }
-        this.list = data;
+        let path: Array<Resource> = []
+        if (!this.root || !this.root.path) {
+          console.log("we need root to set slider navigation")
+        } else {
+          path = this.root.path.map(x => x);
+        }
+
+        this.companyOptions = data.map(x => {
+          const companyPath = path.concat({name: x.name, uid: x.uid});
+          return{name: x.name, uid: x.uid, path: companyPath}
+        });
         this.isLoadingResults = false;
       },
       error: (err: Error) => {
@@ -80,30 +96,25 @@ export class CompanyNavRoleoutComponent implements SliderPanel, OnDestroy {
     })
     this.sliderSubscription = this.sliderService.sliderNavigation(Sliders.NavSlider)?.subscribe({
       next: value => {
-        if (!value || !value.path) {
-          this.clearCompanyDisplay();
-          return;
-        }
-        const index = value.path.length;
-        if (index <= this.index) {
-          this.clearCompanyDisplay();
-        }
+        const match = MatchNavigationItem(value, this.root);
+        if (match <=0)
+          this.reset();
       }
     })
   }
 
-  clearCompanyDisplay() {
+  reset() {
     this.showSubmenu = "closed";
     timer(300).subscribe({
       next: _ => {
-        this.company = undefined;
+        this.selectedCompany = undefined;
       }
     })
   }
 
-  navigate(item: NavigationItem | undefined) {
+  selectCompany(item: NavigationItem | undefined) {
     this.sliderService.updateSliderNavigation(Sliders.NavSlider, item);
-    this.company = item;
+    this.selectedCompany = item;
     this.showSubmenu = "open";
   }
 

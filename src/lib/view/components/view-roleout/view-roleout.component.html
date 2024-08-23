@@ -1,0 +1,48 @@
+@if (view) {
+  <span class="flex flex-column slider-panel device">
+    <span class="flex jc-space-between v-align-center m2">
+      <span class="mat-mini-text">{{ view.name }}</span>
+      <span>
+        <button mat-mini-fab [matMenuTriggerFor]="menu" aria-label="open view actions menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu class="button-menu" #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button
+            (click)="archiveView()"
+            mat-menu-item>
+            <mat-icon>archive</mat-icon>
+            <span>Archive</span>
+          </button>
+        </mat-menu>
+      </span>
+    </span>
+    <mat-divider></mat-divider>
+    <span class="flex flex-column roleout-item">
+      <span class="flex jc-space-evenly v-align-center">
+        <span class="attribute">name</span><span class="value">{{ view.name }}</span>
+      </span>
+      <span class="flex jc-space-evenly v-align-center">
+        <span class="attribute">uid</span><span class="value">{{ view.uid }}</span>
+      </span>
+    </span>
+    @if (loading) {
+      <span class="flex flex-column roleout-item">
+        loading...
+      </span>
+    } @else {
+      <span class="flex flex-column roleout-item">
+        <span class="flex jc-space-evenly v-align-center">
+          <span class="attribute">active</span><span class="value">{{ view.active }}</span>
+        </span>
+        <span class="flex jc-space-evenly v-align-center">
+          <span class="attribute">app</span><span class="value">{{ view.app }}</span>
+        </span>
+      </span>
+    }
+  </span>
+}
+

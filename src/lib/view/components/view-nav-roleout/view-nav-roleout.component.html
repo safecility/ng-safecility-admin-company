@@ -19,7 +19,7 @@
       <mat-selection-list
         class="roleout-item"
         [multiple]="false" [hideSingleSelectionIndicator]="true">
-        @for (item of list; track item.name) {
+        @for (item of viewOptions; track item.name) {
           <mat-list-option (click)="navigate(item)">{{item.name}}</mat-list-option>
         } @empty {
           <mat-list-item>
@@ -31,10 +31,11 @@
 
   </span>
 
-  @if (view) {
+  @if (selectedView) {
     <lib-view-roleout
       class="slider-component"
-      [view]="view"
+      [parent]="root"
+      [setView]="selectedView"
     >
     </lib-view-roleout>
   }

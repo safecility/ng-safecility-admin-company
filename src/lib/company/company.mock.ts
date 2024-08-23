@@ -1,20 +1,20 @@
 import { BehaviorSubject, Observable, delay, map, of, timer} from "rxjs";
 import { Injectable } from "@angular/core";
-import { Breadcrumb, NavigationItem, UID} from "safecility-admin-services";
+import { Resource, NavigationItem, UID} from "safecility-admin-services";
 import {NewCompany} from "./company.service";
 
 let sourceCompanies: Array<NavigationItem> = [
   {name: "Safecility", uid: "safecility", path: [
-      {name: "company", pathElement: "company"}, {name: "Safecility", pathElement: "safecility"}
-    ] as Array<Breadcrumb>},
+      {name: "company", uid: "company"}, {name: "Safecility", uid: "safecility"}
+    ] as Array<Resource>},
   {name: "Big Corp", uid: "big-corp", path: [
-      {name: "company", pathElement: "company"}, {name: "Big Corp", pathElement: "big-corp"}
+      {name: "company", uid: "company"}, {name: "Big Corp", uid: "big-corp"}
     ] },
   {name: "Small Corp", uid: "small-corp", path:  [
-      {name: "company", pathElement: "company"}, {name: "Small Corp", pathElement: "small-corp"}
+      {name: "company", uid: "company"}, {name: "Small Corp", uid: "small-corp"}
     ]},
   {name: "Mock Corp", uid: "mock-corp", path:  [
-      {name: "company", pathElement: "company"}, {name: "Mock Corp", pathElement: "mock-corp"}
+      {name: "company", uid: "company"}, {name: "Mock Corp", uid: "mock-corp"}
     ]},
 ]
 
@@ -41,7 +41,7 @@ export class CompanyMock {
     return timer(200).pipe(map(_=> {
       let current = this.companies.value;
       current.push( {name: newCompany.name, uid: newCompany.uid, path:  [
-          {name: "company", pathElement: "company"}, {name: newCompany.name, pathElement: newCompany.uid}
+          {name: "company", uid: "company"}, {name: newCompany.name, uid: newCompany.uid}
         ]},)
       this.companies.next(current);
       return true
@@ -67,24 +67,24 @@ export class CompanyMock {
     if (company.uid === "big-corp")
       return of([
         {name: "Solar Power", uid: "power-solar", path: [
-            {name: "views", pathElement: "views"}, {name: "Solar Power", pathElement: "power-solar"}
+            {name: "views", uid: "views"}, {name: "Solar Power", uid: "power-solar"}
           ] },
         {name: "Mock Power", uid: "power-mock", path:  [
-            {name: "views", pathElement: "views"}, {name: "Mock Power", pathElement: "power-mock"}
+            {name: "views", uid: "views"}, {name: "Mock Power", uid: "power-mock"}
           ]},
     ]).pipe(delay(200))
     return of([
-      {name: "Dali", uid: "safecility", path: [
-          {name: "views", pathElement: "views"}, {name: "Dali", pathElement: "dali"}
-        ] as Array<Breadcrumb>},
+      {name: "Dali", uid: "dali", path: [
+          {name: "views", uid: "views"}, {name: "Dali", uid: "dali"}
+        ] as Array<Resource>},
       {name: "Solar Power", uid: "power-solar", path: [
-          {name: "views", pathElement: "views"}, {name: "Solar Power", pathElement: "power-solar"}
+          {name: "views", uid: "views"}, {name: "Solar Power", uid: "power-solar"}
         ] },
       {name: "Three Phase Power", uid: "power-three-phase", path:  [
-          {name: "views", pathElement: "views"}, {name: "Three Phase Power", pathElement: "power-three-phase"}
+          {name: "views", uid: "views"}, {name: "Three Phase Power", uid: "power-three-phase"}
         ]},
       {name: "Mock Power", uid: "power-mock", path:  [
-          {name: "views", pathElement: "views"}, {name: "Mock Power", pathElement: "power-mock"}
+          {name: "views", uid: "views"}, {name: "Mock Power", uid: "power-mock"}
         ]},
     ]).pipe(delay(200))
   }

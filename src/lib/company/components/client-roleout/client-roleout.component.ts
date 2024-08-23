@@ -1,12 +1,18 @@
 import {Component, Input} from '@angular/core';
-import {NavigationItem, Sliders, SliderService} from "safecility-admin-services";
+import {MatchNavigationItem, NavigationItem, SliderPanel, Sliders, SliderService} from "safecility-admin-services";
 import {MatDivider} from "@angular/material/divider";
 import {MatListItem, MatListOption, MatSelectionList} from "@angular/material/list";
-import {ViewNavRoleoutComponent} from "../view-nav-roleout/view-nav-roleout.component";
+import {ViewNavRoleoutComponent} from "../../../view/components/view-nav-roleout/view-nav-roleout.component";
 import {JsonPipe} from "@angular/common";
 import {
   LocationNavRoleoutComponent
 } from "../../../location/components/location-nav-roleout/location-nav-roleout.component";
+
+const routes = [{name:"views", uid:"views", path: [
+    {name: "clients", uid: "clients"}, {name: "views", uid: "views"}
+  ]}, {name:"locations", uid:"locations", path: [
+  {name: "clients", uid: "clients"}, {name: "locations", uid: "locations"}
+]}];
 
 @Component({
   selector: 'lib-client-roleout',
@@ -23,42 +29,52 @@ import {
   templateUrl: './client-roleout.component.html',
   styleUrl: './client-roleout.component.css'
 })
-export class ClientRoleoutComponent {
+export class ClientRoleoutComponent implements SliderPanel{
 
   @Input() company: NavigationItem | undefined;
 
-  @Input() clientRoots: Array<NavigationItem> = [
-    {name:"views", uid:"views", path: [
-        {name: "clients", pathElement: "clients"}, {name: "views", pathElement: "views"}
-      ]}, {name:"locations", uid:"locations", path: [
-        {name: "clients", pathElement: "clients"}, {name: "locations", pathElement: "locations"}
-      ]}];
+  @Input() set setParent( parent: NavigationItem | undefined) {
+    if (!parent || ! parent.path) {
+      console.warn("we need parent to setup root")
+      return;
+    }
+    const path = parent.path.map(x => x).concat({name: "clients", uid: "clients"})
+    this.root = {name: "clients", uid: "clients", path};
+    this.clientRoutes = routes.map( x => {
+      const clientPath = path.map(x => x).concat({name: x.name, uid: x.uid});
+      return {name: x.name, uid: x.uid, path: clientPath};
+    })
+  }
+  root: NavigationItem | undefined;
+  clientRoutes : Array<NavigationItem> | undefined;
 
-  @Input() index = 1;
-
-  nav: NavigationItem | undefined
+  selectedRoute: NavigationItem | undefined
 
   constructor(private sliderService: SliderService,
   ) {
     this.sliderService.sliderNavigation(Sliders.NavSlider)?.subscribe({
       next: (change: NavigationItem | undefined) => {
         if (change && change.path) {
-          console.log("path change", change.path.length);
-          if (change.path.length <= this.index) {
-            this.nav = undefined;
+          if (!this.root || !this.root.path) {
+            console.warn("we need root to calculate slider operation")
             return;
           }
-          else if (change.path.length !== this.index + 1)
-            return;
-        }
-        if (!this.nav || !change || (change.uid !== this.nav.uid)) {
-          this.nav = change;
+
+          const match = MatchNavigationItem(change, this.root);
+          if (match <=0 ) {
+            this.reset();
+          }
         }
       }
     })
   }
 
-  subMenu(item: NavigationItem) {
+  reset() {
+    this.selectedRoute = undefined
+  }
+
+  openSubmenu(item: NavigationItem) {
+    this.selectedRoute = item;
     this.sliderService.updateSliderNavigation(Sliders.NavSlider, item);
   }
 }

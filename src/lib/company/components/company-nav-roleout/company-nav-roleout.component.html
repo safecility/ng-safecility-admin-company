@@ -16,8 +16,8 @@
     <mat-selection-list
       class="full-width"
       [multiple]="false" [hideSingleSelectionIndicator]="true">
-      @for (item of list; track item.name) {
-        <mat-list-option (click)="navigate(item)">{{item.name}}</mat-list-option>
+      @for (item of companyOptions; track item.name) {
+        <mat-list-option (click)="selectCompany(item)">{{item.name}}</mat-list-option>
       } @empty {
         <mat-list-item class="text-center">
           {{isLoadingResults? 'loading...': 'No companies'}}
@@ -28,12 +28,12 @@
 
 </span>
 
-@if (company) {
+@if (selectedCompany) {
   <lib-company-roleout
     [@openClose]="showSubmenu"
     class="slider-component opacity-zero"
-    [company]="company"
-    [index]="index+1"
+    [parent]="root"
+    [setCompany]="selectedCompany"
     (companyChanged)="companyChanged($event)"
   >
   </lib-company-roleout>
