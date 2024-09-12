@@ -2,18 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {Resource, NavigationItem, environmentToken} from "safecility-admin-services";
 import { BehaviorSubject, Observable, delay, map, of, timer} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-
-const sourceCompanies = [
-  {name: "Safecility", uid: "safecility", path: [
-      {name: "company", uid: "company"}, {name: "Safecility", uid: "safecility"}
-    ] as Array<Resource>},
-  {name: "Big Corp", uid: "big-corp", path: [
-      {name: "company", uid: "company"}, {name: "Big Corp", uid: "big-corp"}
-    ] },
-  {name: "Small Corp", uid: "small-corp", path:  [
-      {name: "company", uid: "company"}, {name: "Small Corp", uid: "small-corp"}
-    ]},
-]
+import {Company} from "./company.model";
 
 export interface NewCompany {
   uid: string
@@ -27,6 +16,7 @@ export interface CompanyEmit {
 
 interface environment {
   api: {
+    microservices: boolean
     company: string
   }
 }
@@ -42,57 +32,52 @@ const authHeaders = new HttpHeaders(
 })
 export class CompanyService {
 
-  companies = new BehaviorSubject<Array<NavigationItem>>(sourceCompanies)
+  options = {}
 
   constructor(
     @Inject(environmentToken) private environment: environment,
     private httpClient: HttpClient,
-    ) { }
+    ) {
+    if (environment.api.microservices)
+      this.options = {headers: authHeaders, withCredentials: true}
+  }
 
   uidExists(uid: string): Observable<boolean> {
-    return of(this.companies.value.reduce((p, c) => {
-      if (c.uid === uid)
-        p = true
-      return p
-    }, false)).pipe(delay(300))
+    let companyURL = `${this.environment.api.company}/company/uid/${uid}`;
+    return this.httpClient.get<Company>(companyURL).pipe(map( x => {
+      return !!x
+    }));
   }
 
   addCompany(newCompany: NewCompany): Observable<boolean> {
-    return timer(300).pipe(map(_=> {
-      let current = this.companies.value;
-      current.push( {name: newCompany.name, uid: newCompany.uid, path:  [
-          {name: "company", uid: "company"}, {name: newCompany.name, uid: newCompany.uid}
-        ]},)
-      this.companies.next(current);
-      return true
-    }))
+    let companyURL = `${this.environment.api.company}/company`;
+    return this.httpClient.post<Company>(companyURL, newCompany).pipe(map( x => {
+      return !!x
+    }));
   }
 
   archiveCompany(uid: string): Observable<boolean> {
-    return timer(200).pipe(map(_ => {
-      this.companies.next(this.companies.value.filter(x => x.uid !== uid));
-      return true
-    }))
+    let companyURL = `${this.environment.api.company}/company/uid/${uid}/archive`;
+    return this.httpClient.put<Company>(companyURL, {uid, action: 'archive'}, this.options).pipe(map( x => {
+      return !!x
+    }));
   }
 
-  getCompanyList(): Observable<Array<NavigationItem> | undefined> {
-    console.log("getting device", this.environment.api.company)
+  getCompanyList(): Observable<Array<Resource> | undefined> {
+    console.log("getting company", this.environment.api.company)
     let companyURL = `${this.environment.api.company}/company/list`;
-    return this.httpClient.get<Array<NavigationItem>>(companyURL, {headers: authHeaders, withCredentials: true})
+    return this.httpClient.get<Array<Resource>>(companyURL, this.options)
   }
 
-  getViewList(company: NavigationItem) : Observable<Array<NavigationItem> | undefined> {
-    return of([
-      {name: "Dali", uid: "safecility", path: [
-          {name: "views", uid: "views"}, {name: "Dali", uid: "dali"}
-        ] as Array<Resource>},
-      {name: "Solar Power", uid: "power-solar", path: [
-          {name: "views", uid: "views"}, {name: "Solar Power", uid: "power-solar"}
-        ] },
-      {name: "Three Phase Power", uid: "power-three-phase", path:  [
-          {name: "views", uid: "views"}, {name: "Three Phase Power", uid: "power-three-phase"}
-        ]},
-    ])
+  getCompany(uid: string) : Observable<Company | undefined> {
+    console.log("getting company", this.environment.api.company)
+    let companyURL = `${this.environment.api.company}/company/uid/${uid}`;
+    return this.httpClient.get<Company>(companyURL, this.options);
+  }
+
+  getViewList(company: NavigationItem) : Observable<Array<Resource> | undefined> {
+    let companyURL = `${this.environment.api.company}/company/view/list/${company.uid}`;
+    return this.httpClient.get<Array<NavigationItem>>(companyURL, this.options);
   }
 
 }

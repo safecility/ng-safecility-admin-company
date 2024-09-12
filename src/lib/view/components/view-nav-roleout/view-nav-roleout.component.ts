@@ -111,7 +111,7 @@ export class ViewNavRoleoutComponent implements SliderPanel, OnDestroy {
     this.companyService.getViewList(this.company).subscribe({
       complete(): void {
       },
-      next: (data: Array<NavigationItem> | undefined) => {
+      next: (data: Array<Resource> | undefined) => {
         if (data && data.length > 0) {
           if (!this.company){
             console.error("company must be set")
@@ -123,7 +123,7 @@ export class ViewNavRoleoutComponent implements SliderPanel, OnDestroy {
           } else {
             path = this.root.path.map(x => x);
           }
-          data = data.map((item: NavigationItem) => {
+          data = data.map((item: Resource) => {
             let viewPath = path.map(x => x).concat({name: item.name, uid: item.uid})
             return {name: item.name, uid: item.uid, path: viewPath, company: this.company}
           })

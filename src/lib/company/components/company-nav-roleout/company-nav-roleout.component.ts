@@ -72,7 +72,7 @@ export class CompanyNavRoleoutComponent implements SliderPanel, OnDestroy {
     companyService.getCompanyList().subscribe({
       complete(): void {
       },
-      next: (data: Array<NavigationItem> | undefined) => {
+      next: (data: Array<Resource> | undefined) => {
         if (!data) {
           this.companyOptions = undefined;
           return;

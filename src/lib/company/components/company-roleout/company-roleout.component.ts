@@ -73,7 +73,7 @@ export class CompanyRoleoutComponent implements SliderPanel, OnDestroy {
     this.root = {name: company.name, uid: company.uid, path};
 
     this.company = company;
-
+    //just delay a tiny bit or it's not always obvious content has changed
     timer(200).subscribe(_ => {
       this.loaded = true;
     })
@@ -84,9 +84,7 @@ export class CompanyRoleoutComponent implements SliderPanel, OnDestroy {
         console.error("item should have a path", item);
         itemPath = [];
       }
-      const submenuPath = {name: item.name, uid: item.uid, path: path.map(x=>x).concat(itemPath)};
-      console.log("submenu path", submenuPath.path)
-      return submenuPath;
+      return {name: item.name, uid: item.uid, path: path.map(x => x).concat(itemPath)};
     })
   };
   company: NavigationItem | undefined;
@@ -107,7 +105,6 @@ export class CompanyRoleoutComponent implements SliderPanel, OnDestroy {
     this.sliderSubscription = this.sliderService.sliderNavigation(Sliders.NavSlider)?.subscribe({
       next: value => {
         const match = MatchNavigationItem(value, this.root);
-        console.log("matching ", value, this.root, match);
         if (match <=0)
           this.reset();
       }
